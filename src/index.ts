@@ -1,12 +1,11 @@
-import checkMemory = require("./memoryCheck");
+import checkMemory from "./memoryCheck";
 
 class SmartLru {
   private baseMax: number;
   private dynamic: boolean;
   private checkInterval: number;
   private cache: Map<any, any>;
-  private arr: Map<any, any>[];
-  private keyIndex: any;
+  private arr: [any, any][];
 
   constructor(
     baseMax: number = 500,
@@ -17,17 +16,12 @@ class SmartLru {
     this.dynamic = dynamic;
     this.checkInterval = checkInterval;
     this.cache = new Map();
-    this.arr = [this.cache];
-
-    if (this.dynamic) {
-      setInterval(() => {
-        this.removeLruCache(this.keyIndex);
-      }, this.checkInterval);
-    }
+    this.arr = [];
   }
 
   setCache(key: any, value: any) {
     this.cache.set(key, value);
+    this.arr.unshift([key, value]);
   }
 
   hasCache(key: any) {
@@ -37,37 +31,66 @@ class SmartLru {
   getCache(key: any) {
     if (this.hasCache(key)) {
       if (this.dynamic) {
-        // for async behaviour
-        setTimeout(() => {
-          const KeyIndex = this.arr.findIndex((el: any) => el[0] === key);
-          this.keyIndex = KeyIndex;
-          if (KeyIndex !== -1) {
-            const [elem] = this.arr.splice(KeyIndex, 1);
-            this.arr.unshift(elem);
-          }
-        }, 0);
+        this.removeLruCache(key);
+        const keyIndex = this.arr.findIndex((el) => el[0] === key);
+        if (keyIndex !== -1) {
+          const [elem] = this.arr.splice(keyIndex, 1);
+          this.arr.unshift(elem);
+        }
+        console.log(
+          "LRU Updated Order:",
+          this.arr.map(([k]) => k)
+        );
       }
       return this.cache.get(key);
     } else {
-      throw new Error("Cache not avaliable");
+      throw new Error("Cache not available");
     }
   }
 
   deleteCache(key: any) {
     if (this.hasCache(key)) {
       this.cache.delete(key);
+      const index = this.arr.findIndex(([k]) => k === key);
+      if (index !== -1) this.arr.splice(index, 1);
     } else {
-      throw new Error("Cache not avaliable");
+      throw new Error("Cache not available");
     }
   }
 
   removeLruCache(key: any) {
     const result = checkMemory({ BaseMax: this.baseMax });
     console.log(result);
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
+    if (result.shrink) {
+      const last = this.arr.pop();
+      if (last) {
+        this.cache.delete(last[0]);
+        console.log(`🗑️ Removed LRU key: ${last[0]}`);
+      }
     } else {
-      throw new Error("Cache not avaliable");
+      console.log("Not shrinking cache.");
     }
   }
+
+  dataarr() {
+    return this.arr;
+  }
 }
+
+export default SmartLru;
+
+// ---------- Usage ----------
+const cache = new SmartLru(500, true, 5000);
+
+for (let i = 1; i <= 8; i++) {
+  cache.setCache(`user:${i}`, { name: `User${i}` });
+}
+
+console.log(
+  "Initial order:",
+  cache.dataarr().map(([k]) => k)
+);
+
+cache.getCache("user:8");
+cache.getCache("user:7");
+cache.getCache("user:3");
