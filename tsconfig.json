@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "esnext",
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node","jest"],
     "strict": true
   }
 }
