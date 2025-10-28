@@ -6,6 +6,7 @@ class SmartLru {
   private checkInterval: number;
   private cache: Map<any, any>;
   private arr: Map<any, any>[];
+  private keyIndex: any;
 
   constructor(
     baseMax: number = 500,
@@ -20,7 +21,7 @@ class SmartLru {
 
     if (this.dynamic) {
       setInterval(() => {
-        this.removeLruCache();
+        this.removeLruCache(this.keyIndex);
       }, this.checkInterval);
     }
   }
@@ -38,9 +39,10 @@ class SmartLru {
       if (this.dynamic) {
         // for async behaviour
         setTimeout(() => {
-          const keyIndex = this.arr.findIndex((el: any) => el[0] === key);
-          if (keyIndex !== -1) {
-            const [elem] = this.arr.splice(keyIndex, 1);
+          const KeyIndex = this.arr.findIndex((el: any) => el[0] === key);
+          this.keyIndex = KeyIndex;
+          if (KeyIndex !== -1) {
+            const [elem] = this.arr.splice(KeyIndex, 1);
             this.arr.unshift(elem);
           }
         }, 0);
@@ -59,8 +61,13 @@ class SmartLru {
     }
   }
 
-  removeLruCache() {
+  removeLruCache(key: any) {
     const result = checkMemory({ BaseMax: this.baseMax });
     console.log(result);
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else {
+      throw new Error("Cache not avaliable");
+    }
   }
 }
