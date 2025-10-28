@@ -17,6 +17,10 @@ class SmartLru {
     this.checkInterval = checkInterval;
     this.cache = new Map();
     this.arr = [];
+
+    setInterval(() => {
+      this.removeLruCache();
+    }, this.checkInterval);
   }
 
   setCache(key: any, value: any) {
@@ -31,7 +35,7 @@ class SmartLru {
   getCache(key: any) {
     if (this.hasCache(key)) {
       if (this.dynamic) {
-        this.removeLruCache(key);
+        this.removeLruCache();
         const keyIndex = this.arr.findIndex((el) => el[0] === key);
         if (keyIndex !== -1) {
           const [elem] = this.arr.splice(keyIndex, 1);
@@ -58,14 +62,14 @@ class SmartLru {
     }
   }
 
-  removeLruCache(key: any) {
+  removeLruCache() {
     const result = checkMemory({ BaseMax: this.baseMax });
     console.log(result);
     if (result.shrink) {
       const last = this.arr.pop();
       if (last) {
         this.cache.delete(last[0]);
-        console.log(`🗑️ Removed LRU key: ${last[0]}`);
+        console.log(` Removed LRU key: ${last[0]}`);
       }
     } else {
       console.log("Not shrinking cache.");
