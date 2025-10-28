@@ -1,6 +1,6 @@
 # SmartLru Cache
 
-A **memory-aware LRU (Least Recently Used) cache** for Node.js/TypeScript that automatically adjusts its size based on system memory usage. Ideal for memory-constrained environments like AWS Lambda or VPS servers.
+A **memory-aware LRU (Least Recently Used) cache** for Node.js that automatically adjusts its size based on system memory usage. Ideal for memory-constrained environments like AWS Lambda or VPS servers.
 
 ---
 
