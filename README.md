@@ -12,3 +12,7 @@ A **memory-aware LRU (Least Recently Used) cache** for Node.js that automaticall
 - TypeScript support for **strict typing**.
 - Easy to integrate into any Node.js application.
 
+## Installation
+
+```bash
+npm install lru-smart-cache
