@@ -42,9 +42,3 @@ console.log(cache.hasCache("user_2")); // true
 
 // Delete a key
 cache.deleteCache("user_2");
-
-// View current cache order (most recent first)
-console.log(cache.dataarr());
-
-// Stop automatic memory monitoring (optional)
-cache.stopInterval();
