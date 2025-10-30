@@ -1,4 +1,4 @@
-# SmartLru Cache
+<!-- # SmartLru Cache
 
 A **memory-aware LRU (Least Recently Used) cache** for Node.js that automatically adjusts its size based on system memory usage. Ideal for memory-constrained environments like AWS Lambda or VPS servers.
 
@@ -17,6 +17,32 @@ A **memory-aware LRU (Least Recently Used) cache** for Node.js that automaticall
 ````bash
 npm install lru-smart-cache
 
+import SmartLru from "lru-smart-cache";
+
+// Create a new SmartLru instance
+// baseMax: maximum cache size (default 500)
+// dynamic: enable memory-aware resizing (default true)
+// checkInterval: memory check interval in ms (default 5000)
+const cache = new SmartLru(500, true, 5000);
+
+// Add items to the cache
+cache.setCache("user_1", { name: "Rahul", age: 25 });
+cache.setCache("user_2", { name: "Anita", age: 30 });
+
+// Retrieve items from the cache
+try {
+  const user1 = cache.getCache("user_1");
+  console.log(user1); // { name: "Rahul", age: 25 }
+} catch (err) {
+  console.error(err.message);
+}
+
+// Check if a key exists
+console.log(cache.hasCache("user_2")); // true
+
+// Delete a key
+cache.deleteCache("user_2"); -->
+```javascript
 import SmartLru from "lru-smart-cache";
 
 // Create a new SmartLru instance
