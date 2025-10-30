@@ -17,10 +17,6 @@ A **memory-aware LRU (Least Recently Used) cache** for Node.js that automaticall
 ````bash
 npm install lru-smart-cache
 
-
-## Usage / Implementation
-
-```ts
 import SmartLru from "lru-smart-cache";
 
 // Create a new SmartLru instance
@@ -52,4 +48,3 @@ console.log(cache.dataarr());
 
 // Stop automatic memory monitoring (optional)
 cache.stopInterval();
-````
