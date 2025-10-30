@@ -36,7 +36,7 @@ class SmartLru {
     this.stopped = true;
   }
 
-  setCache(key: any, value: any) {
+  setCache(key: any, value: any, timer: number) {
     if (this.cache.has(key)) {
       const index = this.arr.findIndex(([k]) => k === key);
       if (index !== -1) this.arr.splice(index, 1);
