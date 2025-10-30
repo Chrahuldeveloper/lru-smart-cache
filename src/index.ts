@@ -8,6 +8,7 @@ class SmartLru {
   private cache: Map<any, any>;
   private arr: [any, any][];
   private stopped = false;
+  private memoryThresholds: number;
 
   constructor(
     baseMax: number = 500,
@@ -19,6 +20,7 @@ class SmartLru {
     this.checkInterval = checkInterval;
     this.cache = new Map();
     this.arr = [];
+    this.memoryThresholds = 70;
 
     if (this.dynamic) {
       this.intervalId = setInterval(() => {
@@ -91,7 +93,10 @@ class SmartLru {
     if (this.stopped) return;
 
     try {
-      const result = checkMemory({ BaseMax: this.baseMax });
+      const result = checkMemory({
+        BaseMax: this.baseMax,
+        MemoryThresholds: this.memoryThresholds,
+      });
 
       if (result?.shrink) {
         const last = this.arr.pop();
@@ -109,6 +114,23 @@ class SmartLru {
 
   dataarr() {
     return this.arr;
+  }
+
+  Peek(key: any) {
+    if (this.cache.has(key)) {
+      return this.cache.get(key);
+    } else {
+      throw new Error("Cache not available");
+    }
+  }
+
+  Lru() {
+    const lastIndex = this.arr.length;
+    return this.arr[lastIndex];
+  }
+
+  Mru() {
+    return this.arr[0];
   }
 }
 

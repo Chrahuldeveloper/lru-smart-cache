@@ -2,6 +2,7 @@ import os from "os";
 
 interface CheckMemoryPrameters {
   BaseMax: number;
+  MemoryThresholds: number;
 }
 
 interface Result {
@@ -9,7 +10,7 @@ interface Result {
   newBaseMax: number;
 }
 
-function checkMemory({ BaseMax }: CheckMemoryPrameters) {
+function checkMemory({ BaseMax, MemoryThresholds }: CheckMemoryPrameters) {
   const res: Result = {
     shrink: false,
     newBaseMax: 0,
@@ -18,7 +19,7 @@ function checkMemory({ BaseMax }: CheckMemoryPrameters) {
   const freeMemoryBytes = os.freemem();
   const usedMemory = totalMemoryBytes - freeMemoryBytes;
   const memoryLoadPercent = (usedMemory / totalMemoryBytes) * 100;
-  if (memoryLoadPercent > 70) {
+  if (memoryLoadPercent > MemoryThresholds) {
     res.newBaseMax = Math.max(BaseMax * 0.5, 50);
     res.shrink = true;
   } else {
